@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <include
+        android:id="@+id/day1"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day2"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day3"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day4"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day5"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day6"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day7"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day8"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day9"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day10"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day11"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day12"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day13"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day14"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day15"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day16"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day17"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day18"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day19"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day20"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day21"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day22"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day23"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day24"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day25"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day26"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day27"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day28"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day29"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day30"
+        layout="@layout/dot_item" />
+
+    <include
+        android:id="@+id/day31"
+        layout="@layout/dot_item" />
+
+</LinearLayout>

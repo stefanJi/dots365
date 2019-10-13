@@ -5,12 +5,11 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import java.util.*
 
 /**
  * Create by jy on 2019-09-28
@@ -25,7 +24,11 @@ class DotsWidgetProvider : AppWidgetProvider() {
         Log.d(TAG, "[onUpdate]")
 
         appWidgetIds.forEach { appWidgetId ->
-            updateWidget(context, appWidgetManager, appWidgetId, DotsWidgetConfig())
+            updateWidget(
+                context,
+                appWidgetManager,
+                appWidgetId
+            )
         }
     }
 
@@ -70,35 +73,31 @@ class DotsWidgetProvider : AppWidgetProvider() {
         fun updateWidget(
             context: Context,
             appWidgetManager: AppWidgetManager,
-            appWidgetId: Int,
-            dotsWidgetConfig: DotsWidgetConfig
+            appWidgetId: Int
         ) {
 
-            val intent = Intent(context, StackWidgetService::class.java).apply {
+            val intent = Intent(context, DotsWidgetService::class.java).apply {
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
             }
 
-            // Create an Intent to launch ExampleActivity
+            // Create an Intent to launch Activity
             val pendingIntent: PendingIntent =
                 Intent(context, DotsWidgetActivity::class.java).let {
                     it.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
                     PendingIntent.getActivity(context, 0, it, 0)
                 }
 
-            // Get the layout for the App Widget and attach an on-click listener
-            // to the button
             val dotDate = DateCalculator.get()
             val views: RemoteViews = RemoteViews(
                 context.packageName,
                 R.layout.widget_dots
             ).apply {
-                setOnClickPendingIntent(R.id.button, pendingIntent)
-                setRemoteAdapter(R.id.grid_view, intent)
-                setEmptyView(R.id.grid_view, R.id.button)
+                setRemoteAdapter(R.id.lv_days, intent)
+                setEmptyView(R.id.lv_days, R.id.loading)
                 setTextViewText(R.id.tvYear, "${dotDate.year}")
                 setTextViewText(R.id.tvPercent, dotDate.percent)
                 setTextViewText(R.id.tvSpend, "${dotDate.dayOfYear}/${dotDate.days}")
+                setOnClickPendingIntent(R.id.dot_content, pendingIntent)
             }
 
             // Tell the AppWidgetManager to perform an update on the current app widget
@@ -107,28 +106,21 @@ class DotsWidgetProvider : AppWidgetProvider() {
     }
 }
 
-class StackWidgetService : RemoteViewsService() {
+class DotsWidgetService : RemoteViewsService() {
 
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
-        return StackRemoteViewsFactory(this.applicationContext, intent)
+        return DotsWidgetRemoteViewFactory(this.applicationContext, intent)
     }
 }
 
-class StackRemoteViewsFactory(
-    private val context: Context,
-    intent: Intent
-) : RemoteViewsService.RemoteViewsFactory {
+class DotsWidgetRemoteViewFactory(private val context: Context, intent: Intent) :
+    RemoteViewsService.RemoteViewsFactory {
 
-    private lateinit var widgetItems: MutableList<WidgetItem>
+    private lateinit var dotDate: DotDate
 
     override fun onCreate() {
-        widgetItems = mutableListOf()
-
-        val dotDate = DateCalculator.get()
-        Log.d(TAG, "days: ${dotDate.days} dayOfYear: ${dotDate.dayOfYear}")
-        repeat(dotDate.days) {
-            widgetItems.add(WidgetItem(it < dotDate.dayOfYear))
-        }
+        dotDate = DateCalculator.get()
+        Log.d(TAG, "days: $dotDate")
     }
 
     override fun getLoadingView(): RemoteViews? = null
@@ -141,29 +133,81 @@ class StackRemoteViewsFactory(
     override fun hasStableIds(): Boolean = true
 
     override fun getViewAt(position: Int): RemoteViews {
-        return RemoteViews(context.packageName, R.layout.widget_item).apply {
-            val item = widgetItems[position]
-            val icon = if (item.spend) {
-                R.drawable.dot_highlight
-            } else {
-                R.drawable.dot_default
+        return RemoteViews(context.packageName, R.layout.dot_row).apply {
+            val month = dotDate.months[position]
+            val gone = View.GONE
+            when {
+                month.total == 31 -> {
+                    setViewVisibility(R.id.day1, View.VISIBLE)
+                    setViewVisibility(R.id.day2, View.VISIBLE)
+                    setViewVisibility(R.id.day3, View.VISIBLE)
+                }
+                month.total == 30 -> setViewVisibility(R.id.day1, gone)
+                month.total == 29 -> {
+                    setViewVisibility(R.id.day1, gone)
+                    setViewVisibility(R.id.day2, gone)
+                }
+                month.total == 28 -> {
+                    setViewVisibility(R.id.day1, gone)
+                    setViewVisibility(R.id.day2, gone)
+                    setViewVisibility(R.id.day3, gone)
+                }
             }
-            setImageViewResource(R.id.widget_item, icon)
+
+            val delta = 31 - month.total
+            repeat(month.total) { i ->
+                val drawable = if (i < month.spend) {
+                    R.drawable.dot_highlight
+                } else {
+                    R.drawable.dot_default
+                }
+                setImageViewResource(DOTS[i + delta], drawable)
+            }
         }
     }
 
-    override fun getCount(): Int = widgetItems.size
+    override fun getCount(): Int = dotDate.months.size
 
     override fun getViewTypeCount(): Int = 1
 
     override fun onDestroy() {
-        widgetItems.clear()
     }
-
-    data class WidgetItem(val spend: Boolean)
-
 
     companion object {
         const val TAG = "WidgetService"
+
+        val DOTS = intArrayOf(
+            R.id.day1,
+            R.id.day2,
+            R.id.day3,
+            R.id.day4,
+            R.id.day5,
+            R.id.day6,
+            R.id.day7,
+            R.id.day8,
+            R.id.day9,
+            R.id.day10,
+            R.id.day11,
+            R.id.day12,
+            R.id.day13,
+            R.id.day14,
+            R.id.day15,
+            R.id.day16,
+            R.id.day17,
+            R.id.day18,
+            R.id.day19,
+            R.id.day20,
+            R.id.day21,
+            R.id.day22,
+            R.id.day23,
+            R.id.day24,
+            R.id.day25,
+            R.id.day26,
+            R.id.day27,
+            R.id.day28,
+            R.id.day29,
+            R.id.day30,
+            R.id.day31
+        )
     }
 }

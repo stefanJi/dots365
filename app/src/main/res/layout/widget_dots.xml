@@ -1,65 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_widget"
     android:padding="@dimen/widget_padding">
 
-    <GridView
-        android:id="@+id/grid_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:columnWidth="8dp"
-        android:gravity="center"
-        android:horizontalSpacing="2dp"
-        android:loopViews="true"
-        android:numColumns="auto_fit"
-        android:verticalSpacing="2dp"
-        tools:listitem="@layout/widget_item" />
+    <include layout="@layout/dots_content" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:layout_gravity="bottom">
-
-        <TextView
-            android:id="@+id/tvYear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            tools:text="2019" />
-
-        <TextView
-            android:id="@+id/tvPercent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            tools:text="60%" />
-
-        <TextView
-            android:id="@+id/tvSpend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            tools:text="245/365" />
-    </RelativeLayout>
-
-    <Button
-        android:id="@+id/button"
+    <ProgressBar
+        android:id="@+id/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Button" />
+        android:layout_gravity="center" />
 
 </FrameLayout>

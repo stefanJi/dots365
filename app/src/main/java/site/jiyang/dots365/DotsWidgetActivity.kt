@@ -1,40 +1,102 @@
 package site.jiyang.dots365
 
-import android.appwidget.AppWidgetManager
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import android.text.Html
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.BaseAdapter
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import site.jiyang.dots365.fragment.ConfigFragment
-import site.jiyang.dots365.fragment.GuideFragment
+import kotlinx.android.synthetic.main.activity_dots365.*
+import kotlinx.android.synthetic.main.dots_content.*
 
 /**
  * Create by jy on 2019-09-28
  */
 class DotsWidgetActivity : AppCompatActivity() {
 
-    private var appWidgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
-
+    @SuppressLint("SetTextI18n")
     override fun onCreate(bundle: Bundle?) {
         super.onCreate(bundle)
         setContentView(R.layout.activity_dots365)
+        tip.text = Html.fromHtml(getString(R.string.tip))
 
-        appWidgetId = intent?.extras?.getInt(
-            AppWidgetManager.EXTRA_APPWIDGET_ID,
-            AppWidgetManager.INVALID_APPWIDGET_ID
-        ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
+        val dotDate = DateCalculator.get()
 
-        Log.d(TAG, "[onCreate] appWidgetId: $appWidgetId")
+        tvYear.text = "${dotDate.year}"
+        tvPercent.text = dotDate.percent
+        tvSpend.text = "${dotDate.dayOfYear}/${dotDate.days}"
 
-        val fragment = if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
-            GuideFragment.instance()
-        } else {
-            ConfigFragment.instance(appWidgetId)
+        val adapter = Adapter(dotDate)
+        lv_days.adapter = adapter
+
+        btn_home_page.setOnClickListener {
+            Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/stefanJi/dots365")).apply {
+                startActivity(this)
+            }
         }
-
-        supportFragmentManager.beginTransaction().add(R.id.container, fragment).commit()
     }
 
     companion object {
         const val TAG = "DotsConfigActivity"
     }
+}
+
+class Adapter(private val dotDate: DotDate) : BaseAdapter() {
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        var holder = convertView?.tag as? Holder
+        var v = convertView
+        if (holder == null) {
+            v = LayoutInflater.from(parent.context).inflate(R.layout.dot_row, parent, false)
+            holder = Holder(DotsWidgetRemoteViewFactory.DOTS.map {
+                v.findViewById<ImageView>(it)
+            })
+            v.tag = holder
+        }
+
+        val month = dotDate.months[position]
+        when {
+            month.total == 31 -> {
+                holder.days[0].visibility = View.VISIBLE
+                holder.days[1].visibility = View.VISIBLE
+                holder.days[2].visibility = View.VISIBLE
+            }
+            month.total == 30 -> {
+                holder.days[0].visibility = View.GONE
+            }
+            month.total == 29 -> {
+                holder.days[0].visibility = View.GONE
+                holder.days[1].visibility = View.GONE
+            }
+            month.total == 28 -> {
+                holder.days[0].visibility = View.GONE
+                holder.days[1].visibility = View.GONE
+                holder.days[2].visibility = View.GONE
+            }
+        }
+
+        val delta = 31 - month.total
+        repeat(month.total) { i ->
+            val drawable = if (i < month.spend) {
+                R.drawable.dot_highlight
+            } else {
+                R.drawable.dot_default
+            }
+            holder.days[i + delta].setImageResource(drawable)
+        }
+        return v!!
+    }
+
+    override fun getItem(position: Int): Any = dotDate.months[position]
+
+    override fun getItemId(position: Int): Long = 0
+
+    override fun getCount(): Int = dotDate.months.size
+
+    data class Holder(val days: List<ImageView>)
 }

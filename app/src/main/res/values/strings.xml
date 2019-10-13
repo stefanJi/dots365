@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">Dots365</string>
+    <string name="app_name">DOTS 365</string>
+    <string name="update_at">Update at %1$s</string>
+    <string name="welcome">Welcome to Dots365</string>
+    <string name="tip"><![CDATA[<h2>Add this widget</h2><ul><li>On a Home screen, touch and hold an empty space.</li><li>Tap Widgets.</li><li>Touch and hold this widget.</li><li>You’ll see images of your Home screens.</li><li>Slide the widget to where you want it. Lift your finger.</li></ul>]]></string>
 </resources>

@@ -32,31 +32,6 @@ class DotsWidgetProvider : AppWidgetProvider() {
         }
     }
 
-    override fun onReceive(context: Context?, intent: Intent?) {
-        super.onReceive(context, intent)
-        Log.d(TAG, "[onReceive]")
-    }
-
-    override fun onRestored(context: Context?, oldWidgetIds: IntArray?, newWidgetIds: IntArray?) {
-        super.onRestored(context, oldWidgetIds, newWidgetIds)
-        Log.d(TAG, "[onRestored]")
-    }
-
-    override fun onEnabled(context: Context?) {
-        super.onEnabled(context)
-        Log.d(TAG, "[onEnabled]")
-    }
-
-    override fun onDisabled(context: Context?) {
-        super.onDisabled(context)
-        Log.d(TAG, "[onDisabled]")
-    }
-
-    override fun onDeleted(context: Context?, appWidgetIds: IntArray?) {
-        super.onDeleted(context, appWidgetIds)
-        Log.d(TAG, "[onDeleted]")
-    }
-
     override fun onAppWidgetOptionsChanged(
         context: Context?,
         appWidgetManager: AppWidgetManager?,
@@ -102,6 +77,7 @@ class DotsWidgetProvider : AppWidgetProvider() {
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views)
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.lv_days)
         }
     }
 }
@@ -128,6 +104,7 @@ class DotsWidgetRemoteViewFactory(private val context: Context, intent: Intent) 
     override fun getItemId(position: Int): Long = position.toLong()
 
     override fun onDataSetChanged() {
+        dotDate = DateCalculator.get()
     }
 
     override fun hasStableIds(): Boolean = true

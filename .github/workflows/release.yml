@@ -14,8 +14,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - run: ./gradlew app:assembleRelease --info
-      - run: cp app/build/outputs/apk/release/app-release.apk ${GITHUB_REF:10}.apk
+      - run: |
+          ./gradlew app:assembleRelease --info
+          cp app/build/outputs/apk/release/app-release.apk ${GITHUB_REF:10}.apk
       - uses: softprops/action-gh-release@v1
         with:
           files: ${GITHUB_REF:10}.apk

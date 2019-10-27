@@ -4,4 +4,4 @@
 
 [Download Apk](https://github.com/stefanJi/dots365/releases)
 
-![](art/dots_365_android.png)
+![](art/dots365.png)

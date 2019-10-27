@@ -133,12 +133,7 @@ class DotsWidgetRemoteViewFactory(private val context: Context, intent: Intent) 
 
             val delta = 31 - month.total
             repeat(month.total) { i ->
-                val drawable = if (i < month.spend) {
-                    R.drawable.dot_highlight
-                } else {
-                    R.drawable.dot_default
-                }
-                setImageViewResource(DOTS[i + delta], drawable)
+                setImageViewResource(DOTS[i + delta], DrawableGetter.get(i, month))
             }
         }
     }

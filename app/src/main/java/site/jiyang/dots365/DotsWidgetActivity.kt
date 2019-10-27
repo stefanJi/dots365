@@ -82,12 +82,7 @@ class Adapter(private val dotDate: DotDate) : BaseAdapter() {
 
         val delta = 31 - month.total
         repeat(month.total) { i ->
-            val drawable = if (i < month.spend) {
-                R.drawable.dot_highlight
-            } else {
-                R.drawable.dot_default
-            }
-            holder.days[i + delta].setImageResource(drawable)
+            holder.days[i + delta].setImageResource(DrawableGetter.get(i, month))
         }
         return v!!
     }

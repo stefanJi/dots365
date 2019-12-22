@@ -15,6 +15,21 @@ import android.widget.RemoteViewsService
  * Create by jy on 2019-09-28
  */
 class DotsWidgetProvider : AppWidgetProvider() {
+
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        when (intent.action) {
+            Intent.ACTION_TIMEZONE_CHANGED,
+            Intent.ACTION_DATE_CHANGED,
+            Intent.ACTION_TIME_CHANGED -> {
+                val id = with(WidgetIdManager) { context.getAppWidgetId() }
+                if (id > 0) {
+                    updateWidget(context, AppWidgetManager.getInstance(context), id)
+                }
+            }
+        }
+    }
+
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
@@ -39,6 +54,9 @@ class DotsWidgetProvider : AppWidgetProvider() {
         newOptions: Bundle?
     ) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
+        with(WidgetIdManager) {
+            context?.saveAppWidgetId(appWidgetId)
+        }
         Log.d(TAG, "[onAppWidgetOptionsChanged]")
     }
 
@@ -78,6 +96,10 @@ class DotsWidgetProvider : AppWidgetProvider() {
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views)
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.lv_days)
+
+            with(WidgetIdManager) {
+                context.saveAppWidgetId(appWidgetId)
+            }
         }
     }
 }
@@ -181,5 +203,21 @@ class DotsWidgetRemoteViewFactory(private val context: Context, intent: Intent) 
             R.id.day30,
             R.id.day31
         )
+    }
+}
+
+object WidgetIdManager {
+
+    private const val SP_NAME = "DotsWidget"
+    private const val KEY = "widget_id"
+
+    fun Context.getAppWidgetId(): Int {
+        return this.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
+            .getInt(KEY, -1)
+    }
+
+    fun Context.saveAppWidgetId(id: Int) {
+        this.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE).edit().putInt(KEY, id)
+            .apply()
     }
 }

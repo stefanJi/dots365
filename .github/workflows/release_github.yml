@@ -18,10 +18,11 @@ jobs:
       - name: Asseble release
         run: |
           ./gradlew app:assembleRelease --info
-          cp app/build/outputs/apk/release/app-release.apk ${GITHUB_REF:10}.apk
+          cp app/build/outputs/apk/release/app-release.apk release.apk
+          ls|grep apk
       - name: Upload
-        uses: softprops/action-gh-release@v1
+        uses: stefanji/action-gh-release@releases/test
         with:
-          files: ${GITHUB_REF:10}.apk
+          files: release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,8 +1,5 @@
 package site.jiyang.dots365
 
-import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
@@ -19,7 +16,6 @@ import kotlinx.android.synthetic.main.dots_content.*
  */
 class DotsWidgetActivity : AppCompatActivity() {
 
-    @SuppressLint("SetTextI18n")
     override fun onCreate(bundle: Bundle?) {
         super.onCreate(bundle)
         setContentView(R.layout.activity_dots365)
@@ -33,12 +29,6 @@ class DotsWidgetActivity : AppCompatActivity() {
 
         val adapter = Adapter(dotDate)
         lv_days.adapter = adapter
-
-        btn_home_page.setOnClickListener {
-            Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/stefanJi/dots365")).apply {
-                startActivity(this)
-            }
-        }
     }
 
     companion object {

@@ -28,12 +28,4 @@
         android:layout_width="wrap_content"
         android:layout_height="10dp" />
 
-    <Button
-        android:id="@+id/btn_home_page"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="View IN GitHub"
-        android:textAllCaps="false" />
-
 </LinearLayout>

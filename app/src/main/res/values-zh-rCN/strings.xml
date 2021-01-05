@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DOTS 365</string>
+    <string name="update_at">更新于 %1$s</string>
+    <string name="welcome">欢迎使用 Dots 365</string>
+    <string name="tip"><![CDATA[<h2>如何添加控件</h2><ul><li>在手机的主屏幕上, 长按空白区域</li><li>在控件列表中选择 Dots 365 提供的控件</li><li>长按控件并拖动到主屏幕上</li></ul>]]></string>
+</resources>
